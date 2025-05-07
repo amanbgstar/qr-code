@@ -3,5 +3,6 @@ import { QrScannerComponent } from './qr-scanner/qr-scanner.component';
 
 export const routes: Routes = [
     { path: '', component: QrScannerComponent },
-    { path: 'qr-code', component: QrScannerComponent }
+    { path: 'qr-code', component: QrScannerComponent },
+    { path: '**', redirectTo: '' }
 ];
