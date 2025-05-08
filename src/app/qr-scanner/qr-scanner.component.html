@@ -1,45 +1,50 @@
 <div class="main-container">
 
-    <!-- Main Two Buttons -->
-    <div *ngIf="!scannerMode && !generatorMode" class="button-group">
-      <button mat-raised-button color="primary" class="custom-button" (click)="showScanner()">
-        <mat-icon>qr_code_scanner</mat-icon>&nbsp;Scan QR Code
-      </button>
-      <button mat-raised-button color="accent" class="custom-button" (click)="showGenerator()">
-        <mat-icon>qr_code</mat-icon>&nbsp;Generate QR Code
-      </button>
-    </div>
-  
-    <!-- QR Scanner Section -->
-    <div *ngIf="scannerMode" class="scanner-section mat-elevation-z3">
-      <button mat-icon-button class="close-button" (click)="closeSection()" aria-label="Close">
-        <mat-icon>close</mat-icon>
-      </button>
-      <h2><mat-icon>qr_code_scanner</mat-icon>&nbsp;Scan QR Code</h2>
-      <zxing-scanner [enable]="scannerMode" (scanSuccess)="handleQrCodeResult($event)"></zxing-scanner>
-      <div *ngIf="qrResult">
-        <p><strong>QR Code Result:</strong> {{ qrResult }}</p>
-        <button mat-stroked-button color="primary" (click)="copyResult()">Copy</button>
-      </div>
-    </div>
-  
-    <!-- QR Generator Section -->
-    <div *ngIf="generatorMode" class="generator-section mat-elevation-z3">
-      <button mat-icon-button class="close-button" (click)="closeSection()" aria-label="Close">
-        <mat-icon>close</mat-icon>
-      </button>
-      <h2><mat-icon>edit</mat-icon>&nbsp;Create QR Code</h2>
-      <mat-form-field appearance="fill" class="input-field">
-        <mat-label>Enter text to generate QR code</mat-label>
-        <input matInput [(ngModel)]="qrText" />
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="generateQRCode()">Generate QR Code</button>
-  
-      <div *ngIf="generatedQRCode" class="qr-output">
-        <img [src]="generatedQRCode" alt="QR Code" />
-        <button mat-stroked-button color="accent" (click)="downloadQRCode()">Download</button>
-      </div>
-    </div>
-  
+  <!-- Main Two Buttons -->
+  <div *ngIf="!scannerMode && !generatorMode" class="button-group">
+    <button mat-raised-button color="primary" class="custom-button" (click)="showScanner()">
+      <mat-icon>qr_code_scanner</mat-icon>&nbsp;Scan QR Code
+    </button>
+    <button mat-raised-button color="accent" class="custom-button" (click)="showGenerator()">
+      <mat-icon>qr_code</mat-icon>&nbsp;Generate QR Code
+    </button>
   </div>
-  
+
+  <!-- QR Scanner Section -->
+  <div *ngIf="scannerMode" class="scanner-section mat-elevation-z3">
+    <button mat-icon-button class="close-button" (click)="closeSection()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div *ngIf="!qrResult">
+      <h2><mat-icon>qr_code_scanner</mat-icon>&nbsp;Scan QR Code</h2>
+      <zxing-scanner [enable]="scannerMode && scannerEnabled"
+        (scanSuccess)="handleQrCodeResult($event)"></zxing-scanner>
+    </div>
+    <div *ngIf="qrResult">
+      <h2><mat-icon>output</mat-icon>&nbsp;Scaned QR Result</h2>
+      <mat-divider></mat-divider>
+      <p> {{ qrResult }}</p>
+      <mat-divider></mat-divider>
+      <button style="margin-top: 10px;" mat-raised-button color="primary" (click)="copyResult()">Copy</button>
+    </div>
+  </div>
+
+  <!-- QR Generator Section -->
+  <div *ngIf="generatorMode" class="generator-section mat-elevation-z3">
+    <button mat-icon-button class="close-button" (click)="closeSection()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h2><mat-icon>edit</mat-icon>&nbsp;Create QR Code</h2>
+    <mat-form-field appearance="fill" class="input-field">
+      <mat-label>Enter text to generate QR code</mat-label>
+      <input matInput [(ngModel)]="qrText" />
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="generateQRCode()">Generate QR Code</button>
+
+    <div *ngIf="generatedQRCode" class="qr-output">
+      <img [src]="generatedQRCode" alt="QR Code" />
+      <button mat-stroked-button color="accent" (click)="downloadQRCode()">Download</button>
+    </div>
+  </div>
+
+</div>

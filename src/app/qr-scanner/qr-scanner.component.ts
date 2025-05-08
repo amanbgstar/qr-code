@@ -7,21 +7,26 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import QRCode from 'qrcode';
 
 @Component({
   selector: 'app-qr-scanner',
-  imports: [ZXingScannerModule, CommonModule, MatButtonModule, MatCardModule, MatIconModule, FormsModule, MatFormFieldModule, MatInputModule],
+  imports: [ZXingScannerModule, MatDividerModule, CommonModule, MatButtonModule, MatCardModule, MatIconModule, FormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './qr-scanner.component.html',
-  styleUrl: './qr-scanner.component.css'
+  styleUrl: './qr-scanner.component.css',
+  providers: [MatSnackBar]
 })
 export class QrScannerComponent {
-  scannerEnabled = false;
+  scannerEnabled = true;
   qrResult: string | null = null;
   generatedQRCode: string | null = null;
   qrText: string = '';
   scannerMode = false;
   generatorMode = false;
+
+  constructor(private snackBar: MatSnackBar) { }
 
   toggleScanner(): void {
     this.scannerEnabled = !this.scannerEnabled;
@@ -32,20 +37,24 @@ export class QrScannerComponent {
 
   handleQrCodeResult(result: string): void {
     this.qrResult = result;
-    this.scannerEnabled = false; // auto-close scanner after success
+    this.scannerEnabled = false;
   }
 
   copyResult() {
     if (this.qrResult) {
       navigator.clipboard.writeText(this.qrResult);
-      alert('Copied to clipboard!');
+      this.snackBar.open('Copied to clipboard!', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+      });
     }
   }
 
   generateQRCode() {
     if (this.qrText) {
       QRCode.toDataURL(this.qrText)
-        .then((url):any => {
+        .then((url): any => {
           this.generatedQRCode = url;
         })
         .catch((err) => {
@@ -55,17 +64,17 @@ export class QrScannerComponent {
       alert('Please enter text to generate a QR Code');
     }
   }
-  
+
   showScanner() {
     this.reset();
     this.scannerMode = true;
   }
-  
+
   showGenerator() {
     this.reset();
     this.generatorMode = true;
   }
-  
+
   reset() {
     this.scannerMode = false;
     this.generatorMode = false;
@@ -73,7 +82,7 @@ export class QrScannerComponent {
     this.generatedQRCode = null;
     this.qrText = '';
   }
-  
+
   downloadQRCode() {
     const link = document.createElement('a');
     link.href = this.generatedQRCode!;
@@ -87,5 +96,6 @@ export class QrScannerComponent {
     this.qrText = '';
     this.generatedQRCode = null;
     this.qrResult = '';
+    this.scannerEnabled = true;
   }
 }
